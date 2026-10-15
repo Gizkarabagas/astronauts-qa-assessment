@@ -31,23 +31,13 @@ Dokumen lengkap rencana pengujian (Test Plan) dan rancangan test case (Web & API
 
 ```text
 .
-├── README.md                       # Dokumentasi teknis lengkap & link Google Sheets
-├── package.json                    # Konfigurasi dependensi Playwright Test & TypeScript
-├── tsconfig.json                   # Konfigurasi compiler TypeScript
-├── playwright.config.ts            # Konfigurasi Playwright (BaseURL, Reporters, Headers)
-├── generate_excel.js               # Skrip generator workbook Excel
-├── astronauts_qa_assessment.xlsx   # File Excel 4 tab offline backup
-│
 ├── tests/                          # 🎭 Playwright API Automation Suite (TypeScript)
 │   └── reqres-api.spec.ts          # Skrip 11 test case API Playwright TypeScript
-│
-├── playwright-report/              # Laporan HTML interaktif Playwright
-│
-└── sheets_csv/                     # Backup export CSV untuk masing-masing tab
-    ├── Test_Plan_Web.csv
-    ├── Test_Cases_Web.csv
-    ├── API_Test_Cases.csv
-    └── Automation_Summary.csv
+├── .gitignore                      # Git ignore rules
+├── package.json                    # Dependensi Playwright Test & TypeScript
+├── playwright.config.ts            # Konfigurasi Playwright (BaseURL, Reporters, Headers)
+├── README.md                       # Dokumentasi teknis lengkap & link Google Sheets
+└── tsconfig.json                   # Konfigurasi compiler TypeScript
 ```
 
 > **Catatan:** Koleksi versi Postman & Newman juga telah diarsipkan secara terpisah di folder `postman test astro` jika diperlukan pembanding.
