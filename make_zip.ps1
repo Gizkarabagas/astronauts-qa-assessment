@@ -31,11 +31,8 @@ Add-DirectoryToArchive (Join-Path $base "postman") $zip $base
 Add-DirectoryToArchive (Join-Path $base "reports") $zip $base
 Add-DirectoryToArchive (Join-Path $base "sheets_csv") $zip $base
 
-Add-FileToArchive (Join-Path $base "astronauts_qa_assessment.xlsx") "astronauts_qa_assessment.xlsx" $zip
 Add-FileToArchive (Join-Path $base "runner.js") "runner.js" $zip
 Add-FileToArchive (Join-Path $base "build_postman.js") "build_postman.js" $zip
-Add-FileToArchive (Join-Path $base "generate_excel.js") "generate_excel.js" $zip
-Add-FileToArchive (Join-Path $base "export_csv.js") "export_csv.js" $zip
 Add-FileToArchive (Join-Path $base "package.json") "package.json" $zip
 Add-FileToArchive (Join-Path $base "README.md") "README.md" $zip
 

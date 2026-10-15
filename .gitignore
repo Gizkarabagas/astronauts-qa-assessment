@@ -2,7 +2,9 @@
 node_modules/
 package-lock.json
 
-# Temporary / Office lock files
+# Spreadsheet files (Use Google Sheets link per requirement)
+*.xlsx
+*.xls
 ~$*.xlsx
 *.tmp
 
