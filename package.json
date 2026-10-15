@@ -7,6 +7,8 @@
     "test": "node runner.js",
     "test:cli": "newman run ./postman/astronauts-reqres-collection.json -e ./postman/astronauts-reqres-environment.json",
     "test:report": "node runner.js",
+    "test:playwright": "npx playwright test",
+    "test:playwright:report": "npx playwright show-report",
     "build:postman": "node build_postman.js",
     "export:excel": "node generate_excel.js"
   },
@@ -22,6 +24,7 @@
   "author": "QA Candidate",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "newman": "^6.2.1",
     "newman-reporter-htmlextra": "^1.23.1",
     "xlsx": "^0.18.5"

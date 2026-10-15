@@ -19,7 +19,7 @@ Dokumen lengkap rencana pengujian (Test Plan) dan rancangan test case (Web & API
 | :---: | :--- | :---: | :--- |
 | **1-4** | **Task 1 – Web Testing:** Test Plan & Test Cases untuk Astronauts web ([astronauts.id](https://www.astronauts.id/)) | **SELESAI** | Tersedia di **Tab 1 (`Test Plan (Web)`)** dan **Tab 2 (`Test Cases (Web)`)** pada [Google Sheets](https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing) (25 Test Cases mencakup Cart Page & Homepage). |
 | **1-4** | **Task 2 – API Test Cases:** Desain minimal 3 API dengan method berbeda (GET, POST, PUT, DELETE) pada ReqRes | **SELESAI** | Tersedia di **Tab 3 (`API Test Cases`)** pada [Google Sheets](https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing) (11 Test Cases lengkap dengan Positive, Negative, & Edge scenarios). |
-| **5** | **API Automation Test (Postman):** Buat automasi untuk API test cases, sertakan petunjuk setup & command | **SELESAI** | Postman Collection v2.1.0 di folder [`postman/`](./postman/), Newman runner [`runner.js`](./runner.js), dan skrip eksekusi `npm test`. |
+| **5** | **API Automation Test (Postman / Playwright):** Buat automasi untuk API test cases, sertakan petunjuk setup & command | **SELESAI** | Tersedia **2 Pilihan Framework Automasi:**<br>1. **Postman & Newman CLI** di folder [`postman/`](./postman/) (`npm test`)<br>2. **Playwright API Test Suite** di folder [`tests/`](./tests/) (`npm run test:playwright`) |
 | **6** | **Tab Automation Summary di Google Sheets:** Memuat Tool(s) used, Coverage summary, How to execute tests | **SELESAI** | Tersedia di **Tab 4 (`Automation Summary`)** pada [Google Sheets](https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing) serta rangkuman di bawah. |
 | **7** | **Share Google Sheet Link & GitHub/Zip Link ke Tim TA** | **SELESAI** | Google Sheet link publik aktif dan repositori GitHub ini siap diserahkan ke tim TA. |
 
@@ -30,16 +30,19 @@ Dokumen lengkap rencana pengujian (Test Plan) dan rancangan test case (Web & API
 ```text
 .
 ├── README.md                       # Dokumentasi teknis lengkap & link Google Sheets
-├── package.json                    # Konfigurasi dependensi Newman, reporter, dan npm scripts
+├── package.json                    # Konfigurasi dependensi Postman, Newman & Playwright
 ├── runner.js                       # Skrip Node.js Newman runner (CLI & HTML extra report)
-├── build_postman.js                # Skrip generator Postman Collection & Environment JSON
+├── playwright.config.js            # Konfigurasi Playwright API Test Framework
 ├── reqres-postman-automation.zip   # Paket arsip ZIP siap submit untuk tim TA
 │
-├── postman/                        # File Postman Collection & Environment
+├── tests/                          # 🎭 Playwright API Automation Suite
+│   └── reqres-api.spec.js          # Skrip 11 test case API Playwright
+│
+├── postman/                        # 🚀 Postman Collection & Environment
 │   ├── astronauts-reqres-collection.json
 │   └── astronauts-reqres-environment.json
 │
-├── reports/                        # Laporan hasil eksekusi automasi
+├── reports/                        # Laporan hasil eksekusi Newman
 │   └── reqres-api-report.html      # Laporan visual HTML interaktif (100% Pass)
 │
 └── sheets_csv/                     # Backup export CSV untuk masing-masing tab
@@ -60,36 +63,37 @@ Dokumen lengkap rencana pengujian (Test Plan) dan rancangan test case (Web & API
    git clone https://github.com/Gizkarabagas/astronauts-qa-assessment.git
    cd astronauts-qa-assessment
    ```
-3. Pasang dependensi pengujian:
+3. Pasang seluruh dependensi:
    ```bash
    npm install
    ```
 
-### Menjalankan Pengujian (Command Execution)
+---
 
-#### Opsi A: Lewat Command Line / Terminal (Paling Direkomendasikan)
-Jalankan perintah pengujian:
+### PILIHAN 1: Menjalankan via Postman & Newman (Opsi Standar)
+
 ```bash
 npm test
 ```
-*Atau:*
-```bash
-node runner.js
-```
-**Output yang dihasilkan:**
-- Newman akan mengeksekusi ke-11 request API ReqRes secara otomatis.
-- Hasil pengujian langsung dicetak di console/terminal dengan rincian status code, response time SLA, dan assertions pass.
-- Laporan visual HTML otomatis dibuat di: [`reports/reqres-api-report.html`](./reports/reqres-api-report.html).
+*Atau jalankan:* `node runner.js`
 
-#### Opsi B: Lewat Postman Desktop Application (GUI)
-1. Buka aplikasi **Postman**.
-2. Klik tombol **Import** (atau tekan `Ctrl + O`).
-3. Pilih berkas dari folder `postman/`:
-   - `astronauts-reqres-collection.json`
-   - `astronauts-reqres-environment.json`
-4. Di bagian kanan atas, aktifkan Environment: **`ReqRes - Astronauts QA Environment`**.
-5. Buka tab Collections > pilih **`Astronauts QA Assessment - ReqRes API Automation`**.
-6. Klik tombol **`Run`** > lalu klik **`Run Astronauts QA Assessment`**.
+- Mengeksekusi seluruh 11 request API via command-line.
+- Laporan HTML visual otomatis dibuat di: [`reports/reqres-api-report.html`](./reports/reqres-api-report.html).
+- Bisa juga di-import ke aplikasi **Postman Desktop** via file [`postman/astronauts-reqres-collection.json`](./postman/astronauts-reqres-collection.json).
+
+---
+
+### PILIHAN 2: Menjalankan via Playwright (Opsi Code-Based)
+
+```bash
+npm run test:playwright
+```
+
+- Mengeksekusi file pengujian [`tests/reqres-api.spec.js`](./tests/reqres-api.spec.js) menggunakan test runner bawaan Playwright.
+- Untuk melihat laporan interaktif Playwright:
+  ```bash
+  npm run test:playwright:report
+  ```
 
 ---
 
@@ -98,27 +102,17 @@ node runner.js
 Rincian lengkap juga dapat dilihat langsung di Google Sheets pada **Tab 4 (`Automation Summary`)**:
 
 ### 1. Tool(s) Used
-- **Postman Desktop (v11+)**: Perancangan request, pre-request dynamic data, dan assertion test scripts.
-- **Newman CLI (v6.2.1)**: Headless test runner collection Postman untuk eksekusi otomatis.
+- **Postman Desktop (v11+)** & **Newman CLI (v6.2.1)**: Collection runner untuk API testing otomatis.
+- **Playwright Test (@playwright/test)**: Modern headless automation framework untuk REST API.
 - **newman-reporter-htmlextra (v1.23.1)**: Dashboard reporting HTML interaktif dengan visualisasi metrik performa.
-- **Node.js (v24.x)**: Runtime JavaScript untuk orchestrasi runner.
+- **Node.js**: Runtime JavaScript untuk menjalankan runner automasi.
 
 ### 2. Coverage Summary
 - **Target Host**: `https://reqres.in`
 - **Metode HTTP**: 4 Metode Lengkap (**GET**, **POST**, **PUT**, **DELETE**).
 - **Jumlah Endpoint**: 5 Endpoint utama (`/api/users/{id}`, `/api/users`, `/api/register`, dll.).
 - **Jumlah Test Scenarios**: 11 Skenario (6 Positif, 5 Negatif & Boundary/Edge).
-- **Total Test Assertions**: **29 Assertions**
-  - Status Code Verification (200, 201, 204, 400, 404)
-  - SLA Response Time Threshold (< 1500 ms)
-  - Content-Type Header Verification (`application/json`)
-  - Schema & Data Type Verification (ID types, timestamps, email formats)
-  - Negative Error Messages Matching (`Missing password`, `Missing email or username`)
-- **Tingkat Kelulusan (Pass Rate)**: **100% PASS (29 Passed, 0 Failed, 0 Skipped)**.
-- **Rata-rata Waktu Respon**: **~242 ms**.
-
-### 3. How to Execute Tests
-Lihat bagian **Petunjuk Eksekusi Automasi API (Requirement Poin 5)** di atas.
+- **Tingkat Kelulusan (Pass Rate)**: **100% PASS**.
 
 ---
 

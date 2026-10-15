@@ -8,6 +8,10 @@ package-lock.json
 ~$*.xlsx
 *.tmp
 
+# Playwright Test Results & Reports
+playwright-report/
+test-results/
+
 # Log files
 npm-debug.log*
 yarn-debug.log*
