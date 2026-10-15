@@ -2,6 +2,8 @@
 
 Repository ini disusun untuk memenuhi instruksi teknis pengujian **Astronauts QA Technical Assessment** (Task 1 & Task 2) oleh **Bagas Gizkara**.
 
+Framework utama yang digunakan untuk automasi API pada repository ini adalah **Playwright Test dengan TypeScript (TS)**.
+
 ---
 
 ## 🔗 Link Google Sheets Resmi (View Access)
@@ -15,11 +17,11 @@ Dokumen lengkap rencana pengujian (Test Plan) dan rancangan test case (Web & API
 
 ## 📌 Kesesuaian Requirement Soal (Checklist)
 
-| No | Poin Instruksi Soal (Gambar) | Status | Bukti Implementasi di Repository & Google Sheet |
+| No | Poin Instruksi Soal | Status | Bukti Implementasi di Repository & Google Sheet |
 | :---: | :--- | :---: | :--- |
 | **1-4** | **Task 1 – Web Testing:** Test Plan & Test Cases untuk Astronauts web ([astronauts.id](https://www.astronauts.id/)) | **SELESAI** | Tersedia di **Tab 1 (`Test Plan (Web)`)** dan **Tab 2 (`Test Cases (Web)`)** pada [Google Sheets](https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing) (25 Test Cases mencakup Cart Page & Homepage). |
 | **1-4** | **Task 2 – API Test Cases:** Desain minimal 3 API dengan method berbeda (GET, POST, PUT, DELETE) pada ReqRes | **SELESAI** | Tersedia di **Tab 3 (`API Test Cases`)** pada [Google Sheets](https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing) (11 Test Cases lengkap dengan Positive, Negative, & Edge scenarios). |
-| **5** | **API Automation Test (Postman / Playwright):** Buat automasi untuk API test cases, sertakan petunjuk setup & command | **SELESAI** | Tersedia **2 Pilihan Framework Automasi:**<br>1. **Postman & Newman CLI** di folder [`postman/`](./postman/) (`npm test`)<br>2. **Playwright API Test Suite** di folder [`tests/`](./tests/) (`npm run test:playwright`) |
+| **5** | **API Automation Test (Playwright TypeScript):** Buat automasi untuk API test cases, sertakan petunjuk setup & command | **SELESAI** | Diimplementasikan menggunakan **Playwright Test + TypeScript** di folder [`tests/reqres-api.spec.ts`](./tests/reqres-api.spec.ts) (`npm test`). |
 | **6** | **Tab Automation Summary di Google Sheets:** Memuat Tool(s) used, Coverage summary, How to execute tests | **SELESAI** | Tersedia di **Tab 4 (`Automation Summary`)** pada [Google Sheets](https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing) serta rangkuman di bawah. |
 | **7** | **Share Google Sheet Link & GitHub/Zip Link ke Tim TA** | **SELESAI** | Google Sheet link publik aktif dan repositori GitHub ini siap diserahkan ke tim TA. |
 
@@ -30,20 +32,16 @@ Dokumen lengkap rencana pengujian (Test Plan) dan rancangan test case (Web & API
 ```text
 .
 ├── README.md                       # Dokumentasi teknis lengkap & link Google Sheets
-├── package.json                    # Konfigurasi dependensi Postman, Newman & Playwright
-├── runner.js                       # Skrip Node.js Newman runner (CLI & HTML extra report)
-├── playwright.config.js            # Konfigurasi Playwright API Test Framework
-├── reqres-postman-automation.zip   # Paket arsip ZIP siap submit untuk tim TA
+├── package.json                    # Konfigurasi dependensi Playwright Test & TypeScript
+├── tsconfig.json                   # Konfigurasi compiler TypeScript
+├── playwright.config.ts            # Konfigurasi Playwright (BaseURL, Reporters, Headers)
+├── generate_excel.js               # Skrip generator workbook Excel
+├── astronauts_qa_assessment.xlsx   # File Excel 4 tab offline backup
 │
-├── tests/                          # 🎭 Playwright API Automation Suite
-│   └── reqres-api.spec.js          # Skrip 11 test case API Playwright
+├── tests/                          # 🎭 Playwright API Automation Suite (TypeScript)
+│   └── reqres-api.spec.ts          # Skrip 11 test case API Playwright TypeScript
 │
-├── postman/                        # 🚀 Postman Collection & Environment
-│   ├── astronauts-reqres-collection.json
-│   └── astronauts-reqres-environment.json
-│
-├── reports/                        # Laporan hasil eksekusi Newman
-│   └── reqres-api-report.html      # Laporan visual HTML interaktif (100% Pass)
+├── playwright-report/              # Laporan HTML interaktif Playwright
 │
 └── sheets_csv/                     # Backup export CSV untuk masing-masing tab
     ├── Test_Plan_Web.csv
@@ -52,67 +50,90 @@ Dokumen lengkap rencana pengujian (Test Plan) dan rancangan test case (Web & API
     └── Automation_Summary.csv
 ```
 
+> **Catatan:** Koleksi versi Postman & Newman juga telah diarsipkan secara terpisah di folder `postman test astro` jika diperlukan pembanding.
+
 ---
 
 ## ⚙️ Petunjuk Eksekusi Automasi API (Requirement Poin 5: Setup & Command)
 
-### Persyaratan Awal (Setup Environment)
-1. Pastikan komputer telah terpasang **Node.js** (versi 18 ke atas disarankan).
-2. Clone repository ini:
-   ```bash
-   git clone https://github.com/Gizkarabagas/astronauts-qa-assessment.git
-   cd astronauts-qa-assessment
-   ```
-3. Pasang seluruh dependensi:
-   ```bash
-   npm install
-   ```
+### 1. Persyaratan Awal (Setup Environment)
+- Pastikan komputer telah terpasang **Node.js** (v18 ke atas disarankan).
+- Clone repository ini:
+  ```bash
+  git clone https://github.com/Gizkarabagas/astronauts-qa-assessment.git
+  cd astronauts-qa-assessment
+  ```
+- Pasang seluruh dependensi:
+  ```bash
+  npm install
+  ```
 
 ---
 
-### PILIHAN 1: Menjalankan via Postman & Newman (Opsi Standar)
+### 2. Menjalankan Pengujian (Execution Commands)
 
+#### A. Menjalankan Semua Test via Terminal:
 ```bash
 npm test
 ```
-*Atau jalankan:* `node runner.js`
+*Atau:* `npx playwright test`
 
-- Mengeksekusi seluruh 11 request API via command-line.
-- Laporan HTML visual otomatis dibuat di: [`reports/reqres-api-report.html`](./reports/reqres-api-report.html).
-- Bisa juga di-import ke aplikasi **Postman Desktop** via file [`postman/astronauts-reqres-collection.json`](./postman/astronauts-reqres-collection.json).
+#### B. Menjalankan dengan Mode Interaktif (Playwright UI Mode):
+```bash
+npm run test:ui
+```
+*Playwright UI Mode memungkinkan inspeksi request, response payload, headers, timing, dan step debugging secara visual.*
+
+#### C. Melihat Laporan Hasil Uji (HTML Report):
+```bash
+npm run test:report
+```
+*Membuka browser otomatis menampilkan dashboard laporan HTML Playwright.*
 
 ---
 
-### PILIHAN 2: Menjalankan via Playwright (Opsi Code-Based)
-
-```bash
-npm run test:playwright
-```
-
-- Mengeksekusi file pengujian [`tests/reqres-api.spec.js`](./tests/reqres-api.spec.js) menggunakan test runner bawaan Playwright.
-- Untuk melihat laporan interaktif Playwright:
-  ```bash
-  npm run test:playwright:report
-  ```
+### 💡 Catatan Mengenai Rate Limit ReqRes (HTTP 429)
+ReqRes.in memberlakukan limit kuota publik sebesar **40 request/hari per IP anonim**.
+- Jika IP Anda terkena batas kuota (*429 Too Many Requests*), Anda dapat:
+  1. Mengganti jaringan sementara (misalnya menggunakan tethering hotspot seluler) agar IP publik ter-reset.
+  2. Atau mendaftar akun gratis di [app.reqres.in](https://app.reqres.in/) untuk mendapatkan API Key, lalu menjalankannya dengan:
+     ```bash
+     $env:REQRES_API_KEY="api-key-anda"; npm test
+     ```
 
 ---
 
 ## 📊 Ringkasan Automasi (Requirement Poin 6: Automation Summary)
 
-Rincian lengkap juga dapat dilihat langsung di Google Sheets pada **Tab 4 (`Automation Summary`)**:
+Rincian lengkap dapat dilihat langsung di Google Sheets pada **Tab 4 (`Automation Summary`)**:
 
 ### 1. Tool(s) Used
-- **Postman Desktop (v11+)** & **Newman CLI (v6.2.1)**: Collection runner untuk API testing otomatis.
-- **Playwright Test (@playwright/test)**: Modern headless automation framework untuk REST API.
-- **newman-reporter-htmlextra (v1.23.1)**: Dashboard reporting HTML interaktif dengan visualisasi metrik performa.
-- **Node.js**: Runtime JavaScript untuk menjalankan runner automasi.
+- **Playwright Test (`@playwright/test`)**: Headless API testing & automation framework modern dengan performa tinggi.
+- **TypeScript (`typescript`, `@types/node`)**: Strongly typed testing untuk validasi payload request & response schema.
+- **Playwright HTML Reporter**: Dashboard interaktif built-in untuk analisis status, error context, dan network traces.
+- **Node.js**: Runtime environment.
 
 ### 2. Coverage Summary
 - **Target Host**: `https://reqres.in`
 - **Metode HTTP**: 4 Metode Lengkap (**GET**, **POST**, **PUT**, **DELETE**).
 - **Jumlah Endpoint**: 5 Endpoint utama (`/api/users/{id}`, `/api/users`, `/api/register`, dll.).
 - **Jumlah Test Scenarios**: 11 Skenario (6 Positif, 5 Negatif & Boundary/Edge).
-- **Tingkat Kelulusan (Pass Rate)**: **100% PASS**.
+
+### 3. Matriks 11 API Test Cases (Playwright TS)
+
+| ID | Method | Endpoint | Deskripsi Skenario | Tipe Uji | Expected Status |
+| :---: | :---: | :--- | :--- | :---: | :---: |
+| **TC-API-001** | `GET` | `/api/users/2` | Get Single User by Valid ID | Positif | `200 OK` |
+| **TC-API-002** | `GET` | `/api/users/23` | Get Single User Not Found | Negatif | `404 Not Found` |
+| **TC-API-003** | `GET` | `/api/users?page=1` | Get User List with Pagination | Positif | `200 OK` |
+| **TC-API-004** | `POST` | `/api/users` | Create New User dengan Name & Job | Positif | `201 Created` |
+| **TC-API-005** | `POST` | `/api/users` | Create User with Empty Payload `{}` | Edge / Boundary | `201 Created` |
+| **TC-API-006** | `POST` | `/api/register` | Register User Berhasil dengan Password | Positif | `200 OK` |
+| **TC-API-007** | `POST` | `/api/register` | Register User Missing Password | Negatif | `400 Bad Request` |
+| **TC-API-008** | `POST` | `/api/register` | Register User Missing Email | Negatif | `400 Bad Request` |
+| **TC-API-009** | `PUT` | `/api/users/2` | Update User Details (Name & Job) | Positif | `200 OK` |
+| **TC-API-010** | `PUT` | `/api/users/2` | Update User Partial Field (Job Only) | Positif / Edge | `200 OK` |
+| **TC-API-011** | `DELETE`| `/api/users/2` | Delete User by Valid ID | Positif | `204 No Content` |
 
 ---
 
@@ -122,3 +143,5 @@ Rincian lengkap juga dapat dilihat langsung di Google Sheets pada **Tab 4 (`Auto
   [https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1sDNtUrvxzJyZjmBazw0MHY1wmn4Ls6rQvxWLrN7jURo/edit?usp=sharing)
 - **GitHub Repository:**  
   [https://github.com/Gizkarabagas/astronauts-qa-assessment](https://github.com/Gizkarabagas/astronauts-qa-assessment)
+- **Candidate Name:** Bagas Gizkara
+- **Target Role:** QA Engineer - Astronauts
