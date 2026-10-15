@@ -1,0 +1,2 @@
+$kind: collection
+description: Automated API Test Suite for ReqRes API covering GET, POST, PUT, and DELETE methods with Positive, Negative, and Edge test cases for Astronauts QA Technical Assessment.

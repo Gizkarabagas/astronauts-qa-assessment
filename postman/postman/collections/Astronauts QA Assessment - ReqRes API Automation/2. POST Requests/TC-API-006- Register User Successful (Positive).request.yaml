@@ -1,0 +1,29 @@
+$kind: http-request
+name: "TC-API-006: Register User Successful (Positive)"
+description: Register new account with valid credentials.
+url: "{{baseUrl}}/api/register"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: |-
+    {
+        "email": "{{registerEmail}}",
+        "password": "{{registerPassword}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code is 200 OK', function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test('Response contains generated ID and auth token', function () {
+          const jsonData = pm.response.json();
+          pm.expect(jsonData).to.have.property('id').that.is.a('number');
+          pm.expect(jsonData).to.have.property('token').that.is.a('string').and.not.empty;
+      });
+    language: text/javascript
+order: 3000

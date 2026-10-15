@@ -1,0 +1,36 @@
+$kind: http-request
+name: "TC-API-009: Update User Details (Positive)"
+description: Update existing user full name and role.
+url: "{{baseUrl}}/api/users/{{userId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: |-
+    {
+        "name": "Astronauts Lead QA",
+        "job": "Senior SDET Manager"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code is 200 OK', function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test('Updated user data reflects changes', function () {
+          const jsonData = pm.response.json();
+          pm.expect(jsonData.name).to.eql('Astronauts Lead QA');
+          pm.expect(jsonData.job).to.eql('Senior SDET Manager');
+          pm.expect(jsonData).to.have.property('updatedAt').that.is.not.empty;
+      });
+
+      pm.test('updatedAt is a valid ISO 8601 timestamp', function () {
+          const jsonData = pm.response.json();
+          const date = new Date(jsonData.updatedAt);
+          pm.expect(!isNaN(date.getTime())).to.be.true;
+      });
+    language: text/javascript
+order: 1000

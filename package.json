@@ -1,0 +1,29 @@
+{
+  "name": "astronauts-qa-assessment",
+  "version": "1.0.0",
+  "description": "Astronauts QA Technical Assessment - Web Testing & API Automation using Postman & Newman",
+  "main": "runner.js",
+  "scripts": {
+    "test": "node runner.js",
+    "test:cli": "newman run ./postman/astronauts-reqres-collection.json -e ./postman/astronauts-reqres-environment.json",
+    "test:report": "node runner.js",
+    "build:postman": "node build_postman.js",
+    "export:excel": "node generate_excel.js"
+  },
+  "keywords": [
+    "qa",
+    "quality-assurance",
+    "postman",
+    "newman",
+    "api-testing",
+    "astronauts",
+    "reqres"
+  ],
+  "author": "QA Candidate",
+  "license": "ISC",
+  "devDependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1",
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,29 @@
+API Name,Method,Endpoint,Test Case ID,Test Scenario,Input,Expected Response,Status Code,Priority
+Single User,GET,/api/users/{id},TC-API-001,Retrieve single user with valid existing ID (Positive),Path Parameter: id = 2,"JSON object with ""data"" containing user details (id: 2, email, first_name, last_name, avatar) and ""support"" metadata.",200,High
+Single User,GET,/api/users/{id},TC-API-002,Retrieve single user with non-existent ID (Negative),Path Parameter: id = 23,Empty JSON object {} indicating user not found.,404,High
+List Users,GET,/api/users,TC-API-003,Retrieve list of users with pagination (Positive),Query Parameter: page = 1,"JSON object containing pagination metadata (page: 1, per_page, total, total_pages) and ""data"" array of user objects.",200,Medium
+Create User,POST,/api/users,TC-API-004,Create new user with valid name and job title (Positive),"Body (raw JSON): {
+  ""name"": ""Astronauts QA Engineer"",
+  ""job"": ""SDET Specialist""
+}","JSON object returning submitted ""name"", ""job"", generated unique ""id"", and ""createdAt"" ISO 8601 timestamp.",201,High
+Create User,POST,/api/users,TC-API-005,Create user with empty body payload (Edge Case),Body (raw JSON): {},"JSON object returning generated ""id"" and ""createdAt"" timestamp (default fallback handling).",201,Low
+Register User,POST,/api/register,TC-API-006,Register user with valid email and password credentials (Positive),"Body (raw JSON): {
+  ""email"": ""eve.holt@reqres.in"",
+  ""password"": ""pistol""
+}","JSON object returning registered user ""id"" and authorization ""token"" string.",200,High
+Register User,POST,/api/register,TC-API-007,Register user with missing password parameter (Negative),"Body (raw JSON): {
+  ""email"": ""sydney@fife""
+}","JSON error object: {""error"": ""Missing password""}.",400,High
+Register User,POST,/api/register,TC-API-008,Register user with missing email parameter (Negative),"Body (raw JSON): {
+  ""password"": ""pistol""
+}","JSON error object: {""error"": ""Missing email or username""}.",400,High
+Update User,PUT,/api/users/{id},TC-API-009,Update existing user full profile information (Positive),"Path Parameter: id = 2
+Body (raw JSON): {
+  ""name"": ""Astronauts Lead QA"",
+  ""job"": ""Senior SDET Manager""
+}","JSON object returning updated ""name"", ""job"", and ""updatedAt"" ISO 8601 timestamp.",200,High
+Update User,PUT,/api/users/{id},TC-API-010,Update existing user with partial attribute modification (Edge Case),"Path Parameter: id = 2
+Body (raw JSON): {
+  ""job"": ""Principal Automation Architect""
+}","JSON object returning updated ""job"" property along with ""updatedAt"" timestamp.",200,Medium
+Delete User,DELETE,/api/users/{id},TC-API-011,Delete existing user record by valid ID (Positive),Path Parameter: id = 2,Empty response body with HTTP 204 No Content header.,204,High

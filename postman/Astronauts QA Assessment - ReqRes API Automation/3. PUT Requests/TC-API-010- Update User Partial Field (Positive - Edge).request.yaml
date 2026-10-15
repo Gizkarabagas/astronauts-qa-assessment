@@ -1,0 +1,28 @@
+$kind: http-request
+name: "TC-API-010: Update User Partial Field (Positive / Edge)"
+description: Update only one field (job) on user.
+url: "{{baseUrl}}/api/users/{{userId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: |-
+    {
+        "job": "Principal Automation Architect"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code is 200 OK', function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test('Updated field is returned along with updatedAt', function () {
+          const jsonData = pm.response.json();
+          pm.expect(jsonData.job).to.eql('Principal Automation Architect');
+          pm.expect(jsonData).to.have.property('updatedAt').that.is.not.empty;
+      });
+    language: text/javascript
+order: 2000
