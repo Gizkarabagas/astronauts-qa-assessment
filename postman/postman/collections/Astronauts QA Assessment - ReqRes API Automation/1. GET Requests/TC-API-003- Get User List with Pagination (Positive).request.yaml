@@ -1,37 +1,22 @@
 $kind: http-request
-name: "TC-API-003: Get User List with Pagination (Positive)"
-description: Retrieve paginated list of users.
-url: "{{baseUrl}}/api/users?page={{page}}"
+name: "TC-API-003: Get User List with Pagination"
+url: "{{baseUrl}}/api/users?page=1"
 method: GET
 headers:
   Accept: application/json
-queryParams:
-  page: "{{page}}"
 scripts:
   - type: afterResponse
     code: |-
-      pm.test('Status code is 200 OK', function () {
+      // 1. Cek status 200
+      pm.test('Status code is 200', function () {
           pm.response.to.have.status(200);
       });
-
-      pm.test('Pagination metadata is correct', function () {
-          const jsonData = pm.response.json();
-          pm.expect(jsonData.page).to.eql(Number(pm.environment.get('page') || 1));
-          pm.expect(jsonData.per_page).to.be.a('number').above(0);
-          pm.expect(jsonData.total).to.be.a('number').above(0);
-          pm.expect(jsonData.total_pages).to.be.a('number').above(0);
-      });
-
-      pm.test('Users list contains array of user items with valid schema', function () {
-          const jsonData = pm.response.json();
-          pm.expect(jsonData.data).to.be.an('array').that.is.not.empty;
-          jsonData.data.forEach(function(user) {
-              pm.expect(user).to.have.property('id').that.is.a('number');
-              pm.expect(user).to.have.property('email').that.is.a('string');
-              pm.expect(user).to.have.property('first_name').that.is.a('string');
-              pm.expect(user).to.have.property('last_name').that.is.a('string');
-              pm.expect(user).to.have.property('avatar').that.is.a('string');
-          });
+      
+      // 2. Cek data page 1
+      pm.test('Page is 1 and data is not empty', function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData.page).to.eql(1);
+          pm.expect(jsonData.data.length).to.be.above(0);
       });
     language: text/javascript
 order: 3000

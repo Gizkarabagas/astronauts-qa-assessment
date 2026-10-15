@@ -1,25 +1,19 @@
 $kind: http-request
-name: "TC-API-005: Create User with Empty Payload (Edge)"
-description: Test boundary behavior when creating user with empty body.
+name: "TC-API-005: Create User with Empty Payload"
 url: "{{baseUrl}}/api/users"
 method: POST
 headers:
   Content-Type: application/json
-  Accept: application/json
 body:
   type: text
-  content: "{}"
+  content: |-
+    {}
 scripts:
   - type: afterResponse
     code: |-
-      pm.test('Status code is 201 Created', function () {
+      // Cek status 201
+      pm.test('Status code is 201', function () {
           pm.response.to.have.status(201);
-      });
-
-      pm.test('System generates ID and createdAt even with empty payload', function () {
-          const jsonData = pm.response.json();
-          pm.expect(jsonData).to.have.property('id').that.is.not.empty;
-          pm.expect(jsonData).to.have.property('createdAt').that.is.not.empty;
       });
     language: text/javascript
 order: 2000

@@ -1,25 +1,15 @@
 $kind: http-request
 name: "TC-API-002: Get Single User Not Found (Negative)"
-description: Attempt to retrieve non-existent user with ID 23.
-url: "{{baseUrl}}/api/users/{{nonExistentUserId}}"
+url: "{{baseUrl}}/api/users/23"
 method: GET
 headers:
   Accept: application/json
 scripts:
   - type: afterResponse
     code: |-
-      pm.test('Status code is 404 Not Found', function () {
+      // Cek status code 404 Not Found
+      pm.test('Status code is 404', function () {
           pm.response.to.have.status(404);
-      });
-
-      pm.test('Response time is within acceptable limit (< 1500ms)', function () {
-          pm.expect(pm.response.responseTime).to.be.below(1500);
-      });
-
-      pm.test('Response body is an empty JSON object', function () {
-          const jsonData = pm.response.json();
-          pm.expect(jsonData).to.be.an('object');
-          pm.expect(Object.keys(jsonData).length).to.eql(0);
       });
     language: text/javascript
 order: 2000

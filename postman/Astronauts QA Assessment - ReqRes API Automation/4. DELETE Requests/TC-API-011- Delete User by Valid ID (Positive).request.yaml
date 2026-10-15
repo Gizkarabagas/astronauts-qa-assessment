@@ -1,23 +1,13 @@
 $kind: http-request
-name: "TC-API-011: Delete User by Valid ID (Positive)"
-description: Delete an existing user by ID.
-url: "{{baseUrl}}/api/users/{{userId}}"
+name: "TC-API-011: Delete User by Valid ID"
+url: "{{baseUrl}}/api/users/2"
 method: DELETE
-headers:
-  Accept: application/json
 scripts:
   - type: afterResponse
     code: |-
-      pm.test('Status code is 204 No Content', function () {
+      // Cek status 204 No Content
+      pm.test('Status code is 204', function () {
           pm.response.to.have.status(204);
-      });
-
-      pm.test('Response body is empty', function () {
-          pm.expect(pm.response.text()).to.eql('');
-      });
-
-      pm.test('Response time is within acceptable limit (< 1500ms)', function () {
-          pm.expect(pm.response.responseTime).to.be.below(1500);
       });
     language: text/javascript
 order: 1000

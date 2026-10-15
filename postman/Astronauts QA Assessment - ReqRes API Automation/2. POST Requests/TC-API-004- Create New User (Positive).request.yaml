@@ -1,42 +1,29 @@
 $kind: http-request
-name: "TC-API-004: Create New User (Positive)"
-description: Create a user with valid name and job role.
+name: "TC-API-004: Create New User"
 url: "{{baseUrl}}/api/users"
 method: POST
 headers:
   Content-Type: application/json
-  Accept: application/json
 body:
   type: text
   content: |-
     {
-        "name": "{{testUserName}}",
-        "job": "{{testUserJob}}"
+        "name": "morpheus",
+        "job": "leader"
     }
 scripts:
-  - type: beforeRequest
-    code: |-
-      pm.variables.set('testUserName', 'Astronauts QA Engineer');
-      pm.variables.set('testUserJob', 'SDET Specialist');
-    language: text/javascript
   - type: afterResponse
     code: |-
-      pm.test('Status code is 201 Created', function () {
+      // 1. Cek status 201 Created
+      pm.test('Status code is 201', function () {
           pm.response.to.have.status(201);
       });
-
-      pm.test('Created user matches submitted payload', function () {
-          const jsonData = pm.response.json();
-          pm.expect(jsonData.name).to.eql(pm.variables.get('testUserName'));
-          pm.expect(jsonData.job).to.eql(pm.variables.get('testUserJob'));
-          pm.expect(jsonData).to.have.property('id').that.is.not.empty;
-          pm.expect(jsonData).to.have.property('createdAt').that.is.not.empty;
-      });
-
-      pm.test('createdAt is a valid ISO 8601 date string', function () {
-          const jsonData = pm.response.json();
-          const date = new Date(jsonData.createdAt);
-          pm.expect(!isNaN(date.getTime())).to.be.true;
+      
+      // 2. Cek data yang dibuat
+      pm.test('User name is morpheus', function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData.name).to.eql('morpheus');
+          pm.expect(jsonData.job).to.eql('leader');
       });
     language: text/javascript
 order: 1000

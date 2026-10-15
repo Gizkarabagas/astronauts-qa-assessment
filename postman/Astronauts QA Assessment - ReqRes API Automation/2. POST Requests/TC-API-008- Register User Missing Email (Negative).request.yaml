@@ -1,11 +1,9 @@
 $kind: http-request
 name: "TC-API-008: Register User Missing Email (Negative)"
-description: Attempt registration with password only and missing email.
 url: "{{baseUrl}}/api/register"
 method: POST
 headers:
   Content-Type: application/json
-  Accept: application/json
 body:
   type: text
   content: |-
@@ -15,13 +13,15 @@ body:
 scripts:
   - type: afterResponse
     code: |-
-      pm.test('Status code is 400 Bad Request', function () {
+      // 1. Cek status 400 Bad Request
+      pm.test('Status code is 400', function () {
           pm.response.to.have.status(400);
       });
-
-      pm.test('Error message specifies missing email or username', function () {
-          const jsonData = pm.response.json();
-          pm.expect(jsonData).to.have.property('error').that.eql('Missing email or username');
+      
+      // 2. Cek pesan error
+      pm.test('Error message is Missing email or username', function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData.error).to.eql('Missing email or username');
       });
     language: text/javascript
 order: 5000
