@@ -91,8 +91,8 @@ test.describe('ReqRes API Automation Test Suite', () => {
   // ==========================================
   test('TC-API-004: Create New User (Positive 201)', async ({ request }) => {
     const payload = {
-      name: 'morpheus',
-      job: 'leader'
+      name: 'Bagas Gizkara',
+      job: 'Qa Engineer'
     };
 
     const response = await request.post('/api/users', { data: payload });
@@ -157,8 +157,8 @@ test.describe('ReqRes API Automation Test Suite', () => {
   // ==========================================
   test('TC-API-009: Update User Details (Positive 200)', async ({ request }) => {
     const payload = {
-      name: 'morpheus',
-      job: 'zion resident'
+      name: 'Bagas Gizkara',
+      job: 'QA engineer astro'
     };
 
     const response = await request.put('/api/users/2', { data: payload });
